@@ -4,7 +4,7 @@ from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import comtypes
 import pyautogui
 
-REMOTE_URL = 'https://flask-volume-control-1.onrender.com'  # 🔁 À modifier selon ton URL Render
+REMOTE_URL = 'https://flask-volume-control-1.onrender.com'  # Remplace par ton URL Render
 
 def get_volume_interface():
     comtypes.CoInitialize()
@@ -14,25 +14,36 @@ def get_volume_interface():
 
 while True:
     try:
-        r = requests.get(REMOTE_URL)
-        cmd = r.json().get('command')
-
+        # Récupère la commande depuis le serveur Flask
+        r = requests.get(REMOTE_URL + '/next-command')
+        command = r.json().get('command')
+        print(f"Commande reçue pour traitement : {command}")  # Affiche la commande reçue
+        
+        # Récupère l'interface de contrôle du volume
         interface = get_volume_interface()
 
-        if cmd == 'volume_up':
+        # Traitement des commandes
+        if command == 'volume_up':
             v = interface.GetMasterVolumeLevelScalar()
             interface.SetMasterVolumeLevelScalar(min(v + 0.1, 1.0), None)
-        elif cmd == 'volume_down':
+            print("Volume augmenté")
+        elif command == 'volume_down':
             v = interface.GetMasterVolumeLevelScalar()
             interface.SetMasterVolumeLevelScalar(max(v - 0.1, 0.0), None)
-        elif cmd == 'mute':
+            print("Volume diminué")
+        elif command == 'mute':
             interface.SetMute(1, None)
-        elif cmd == 'unmute':
+            print("Son coupé")
+        elif command == 'unmute':
             interface.SetMute(0, None)
-        elif cmd == 'pause':
+            print("Son rétabli")
+        elif command == 'pause':
             pyautogui.press('space')
+            print("Lecture mise en pause/reprise")
+        else:
+            print("Commande non reconnue")
 
     except Exception as e:
-        print("Erreur :", e)
+        print(f"Erreur : {e}")
 
-    time.sleep(2)
+    time.sleep(2)  # Attente de 2 secondes avant de récupérer la prochaine commande

@@ -67,6 +67,7 @@
     <script>
         $(document).ready(function () {
             function envoyerCommande(cmd) {
+                console.log("Envoi de la commande : " + cmd);  // Ajout du log pour la commande
                 $.ajax({
                     url: "/send-command",
                     type: "POST",
