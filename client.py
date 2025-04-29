@@ -4,7 +4,7 @@ from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import comtypes
 import pyautogui
 
-REMOTE_URL = 'https://ton-app.render.com/next-command'  # 🔁 À modifier selon ton URL Render
+REMOTE_URL = 'https://flask-volume-control.onrender.com'  # 🔁 À modifier selon ton URL Render
 
 def get_volume_interface():
     comtypes.CoInitialize()
